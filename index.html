@@ -1,0 +1,2276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Completo de Cálculos para serviços de drywall</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+        }
+        
+        .description {
+            color: #7f8c8d;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .app-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .input-section, .results-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .section-title {
+            color: #3498db;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            background-color: #ecf0f1;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .tab:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .tab.active {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #eaeaea;
+            border-radius: 0 0 5px 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        input[type="number"], select, input[type="checkbox"], input[type="radio"], input[type="text"] {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+        }
+        
+        .unit {
+            display: inline-block;
+            margin-left: 5px;
+            color: #7f8c8d;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .checkbox-group label, .radio-group label {
+            margin-left: 10px;
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+        
+        .btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 600;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            touch-action: manipulation;
+        }
+        
+        .btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-secondary {
+            background-color: #3498db;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+        }
+        
+        .btn-warning:hover {
+            background-color: #d68910;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .material-item {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #3498db;
+        }
+        
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .material-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        .material-quantity {
+            background-color: #2ecc71;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .material-details {
+            color: #7f8c8d;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+        }
+        
+        .room-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+        
+        .badge-quarto {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .badge-sala {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .badge-cozinha {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .badge-banheiro {
+            background-color: #1abc9c;
+            color: white;
+        }
+        
+        .badge-corredor {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .badge-area {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .badge-outro {
+            background-color: #7f8c8d;
+            color: white;
+        }
+        
+        .badge-parede {
+            background-color: #e67e22;
+            color: white;
+        }
+        
+        .badge-teto {
+            background-color: #8e44ad;
+            color: white;
+        }
+        
+        .total-section {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .total-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .total-label {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            margin-bottom: 5px;
+            color: #ecf0f1;
+        }
+        
+        .total-value {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            font-weight: 700;
+            color: #2ecc71;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 30px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .instructions h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: clamp(1.1rem, 2vw, 1.2rem);
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .waste-info {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            color: #856404;
+        }
+        
+        .steel-types {
+            background-color: #e8f6f3;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #16a085;
+        }
+        
+        .steel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .steel-item {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #16a085;
+        }
+        
+        .steel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .steel-name {
+            font-weight: bold;
+            color: #0d503c;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .steel-quantity {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: #2c3e50;
+        }
+        
+        .steel-details {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #7f8c8d;
+        }
+        
+        .cut-plan {
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #2980b9;
+        }
+        
+        .cut-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #bdc3c7;
+            flex-wrap: wrap;
+        }
+        
+        .cut-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #3498db;
+            border-radius: 3px;
+            position: relative;
+            margin-right: 15px;
+            min-width: 150px;
+        }
+        
+        .cut-piece {
+            position: absolute;
+            height: 100%;
+            background-color: #2ecc71;
+            border-radius: 3px;
+        }
+        
+        .cut-waste {
+            position: absolute;
+            height: 100%;
+            background-color: #e74c3c;
+            border-radius: 3px;
+        }
+        
+        .cut-labels {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .waste-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .wall-details {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .wall-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .cost-inputs {
+            background-color: #fef9e7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .cost-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cost-item label {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .cost-item input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .options-group {
+            background-color: #f0f7ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .room-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .room-actions .btn {
+            flex: 1;
+        }
+        
+        .rooms-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .room-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+        
+        .room-item:last-child {
+            border-bottom: none;
+        }
+        
+        .room-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .room-remove {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: clamp(0.7rem, 2vw, 0.8rem);
+        }
+        
+        .material-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .material-name {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .material-qty {
+            color: #3498db; /* ALTERADO: De laranja (#e67e22) para azul (#3498db) */
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        /* Responsividade melhorada */
+        @media (max-width: 768px) {
+            .app-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .steel-grid, .cost-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .totals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cut-bar {
+                width: 150px;
+                min-width: 120px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                min-width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .room-actions {
+                flex-direction: column;
+            }
+            
+            .room-actions .btn {
+                margin-bottom: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .material-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .material-quantity {
+                margin-top: 10px;
+                align-self: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .steel-grid, .cost-grid, .totals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cut-bar {
+                width: 120px;
+                min-width: 100px;
+            }
+            
+            .room-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .room-remove {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+            
+            .cut-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .cut-bar {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            
+            input[type="number"], input[type="text"], select {
+                font-size: 16px; /* Evita zoom no iOS */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema Completo de Cálculo por Ambientes</h1>
+            <p class="description">Calcule materiais para cada ambiente (quarto, sala, cozinha, etc.) e obtenha o total completo do local</p>
+        </header>
+        
+        <div class="app-section">
+            <div class="input-section">
+                <h2 class="section-title">Adicionar Ambiente</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" data-tab="room">Ambiente</button>
+                    <button class="tab" data-tab="single-wall">Parede Única</button>
+                    <button class="tab" data-tab="single-ceiling">Teto Único</button>
+                </div>
+                
+                <!-- ABA AMBIENTE -->
+                <div id="room" class="tab-content active">
+                    <div class="form-group">
+                        <label for="room-type">Tipo de Ambiente</label>
+                        <select id="room-type">
+                            <option value="quarto">Quarto</option>
+                            <option value="sala">Sala</option>
+                            <option value="cozinha">Cozinha</option>
+                            <option value="banheiro">Banheiro</option>
+                            <option value="corredor">Corredor</option>
+                            <option value="area">Área de Serviço</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="room-name">Nome do Ambiente (opcional)</label>
+                        <input type="text" id="room-name" placeholder="Ex: Quarto principal, Sala de estar, etc.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="room-width">Largura do Ambiente (metros) <span class="unit">m</span></label>
+                        <input type="number" id="room-width" min="0.1" step="0.1" value="3.0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="room-length">Comprimento do Ambiente (metros) <span class="unit">m</span></label>
+                        <input type="number" id="room-length" min="0.1" step="0.1" value="4.0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="room-height">Altura do Ambiente (metros) <span class="unit">m</span></label>
+                        <input type="number" id="room-height" min="0.1" step="0.1" value="2.5">
+                    </div>
+                    
+                    <div class="options-group">
+                        <h4 style="color: #3498db; margin-bottom: 15px;">Elementos a incluir neste ambiente:</h4>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="room-include-walls" checked>
+                            <label for="room-include-walls">Incluir paredes</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="room-include-ceiling" checked>
+                            <label for="room-include-ceiling">Incluir teto</label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-group" id="room-walls-options" style="display: block;">
+                        <h4 style="color: #3498db; margin-bottom: 15px;">Opções para paredes:</h4>
+                        
+                        <div class="form-group">
+                            <label for="room-walls-count">Quantas paredes terão drywall?</label>
+                            <select id="room-walls-count">
+                                <option value="4">Todas as 4 paredes</option>
+                                <option value="3">3 paredes</option>
+                                <option value="2">2 paredes</option>
+                                <option value="1">1 parede</option>
+                            </select>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="room-walls-double" checked>
+                            <label for="room-walls-double">Drywall em ambos os lados das paredes</label>
+                        </div>
+                    </div>
+                    
+                    <div class="options-group" id="room-ceiling-options" style="display: block;">
+                        <h4 style="color: #3498db; margin-bottom: 15px;">Opções para teto:</h4>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="room-ceiling-f530" checked>
+                            <label for="room-ceiling-f530">Canaletas F-530 (espaçadas a cada 60cm)</label>
+                        </div>
+                        
+                        <div class="options-group" style="background-color: #e8f6f3; margin-top: 15px;">
+                            <h4 style="color: #16a085; margin-bottom: 15px;">Fixaçao do teto nas paredes:</h4>
+                            
+                            <div class="radio-group">
+                                <input type="radio" id="room-ceiling-tabica" name="room-ceiling-fixation" value="tabica" checked>
+                                <label for="room-ceiling-tabica">Tabica (em cada parede)</label>
+                            </div>
+                            
+                            <div class="radio-group">
+                                <input type="radio" id="room-ceiling-cantoneiras" name="room-ceiling-fixation" value="cantoneiras">
+                                <label for="room-ceiling-cantoneiras">Cantoneiras (em cada parede)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="room-actions">
+                        <button class="btn" id="add-room">Adicionar Ambiente</button>
+                        <button class="btn btn-secondary" id="add-multiple-rooms">Adicionar Vários</button>
+                    </div>
+                    
+                    <div class="rooms-list" id="rooms-added-list">
+                        <p style="text-align: center; color: #7f8c8d; padding: 10px;">Nenhum ambiente adicionado ainda</p>
+                    </div>
+                </div>
+                
+                <!-- ABA PAREDE ÚNICA -->
+                <div id="single-wall" class="tab-content">
+                    <div class="form-group">
+                        <label for="single-wall-width">Largura da Parede (metros) <span class="unit">m</span></label>
+                        <input type="number" id="single-wall-width" min="0.1" step="0.1" value="4.2">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-wall-height">Altura da Parede (metros) <span class="unit">m</span></label>
+                        <input type="number" id="single-wall-height" min="0.1" step="0.1" value="2.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-wall-quantity">Quantidade de Paredes Iguais</label>
+                        <input type="number" id="single-wall-quantity" min="1" value="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-wall-type">Tipo de Acabamento</label>
+                        <select id="single-wall-type">
+                            <option value="single">Apenas um lado com drywall</option>
+                            <option value="double">Drywall em ambos os lados</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn" id="add-single-wall">Adicionar Parede</button>
+                </div>
+                
+                <!-- ABA TETO ÚNICO -->
+                <div id="single-ceiling" class="tab-content">
+                    <div class="form-group">
+                        <label for="single-ceiling-width">Largura do Teto (metros) <span class="unit">m</span></label>
+                        <input type="number" id="single-ceiling-width" min="0.1" step="0.1" value="5.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-ceiling-length">Comprimento do Teto (metros) <span class="unit">m</span></label>
+                        <input type="number" id="single-ceiling-length" min="0.1" step="0.1" value="6.8">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="single-ceiling-quantity">Quantidade de Tetos Iguais</label>
+                        <input type="number" id="single-ceiling-quantity" min="1" value="1">
+                    </div>
+                    
+                    <div class="options-group">
+                        <h4 style="color: #3498db; margin-bottom: 15px;">Opções para teto:</h4>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="single-ceiling-f530" checked>
+                            <label for="single-ceiling-f530">Canaletas F-530 (espaçadas a cada 60cm)</label>
+                        </div>
+                        
+                        <div class="options-group" style="background-color: #e8f6f3; margin-top: 15px;">
+                            <h4 style="color: #16a085; margin-bottom: 15px;">Fixaçao do teto nas paredes:</h4>
+                            
+                            <div class="radio-group">
+                                <input type="radio" id="single-ceiling-tabica" name="single-ceiling-fixation" value="tabica" checked>
+                                <label for="single-ceiling-tabica">Tabica (em cada parede)</label>
+                            </div>
+                            
+                            <div class="radio-group">
+                                <input type="radio" id="single-ceiling-cantoneiras" name="single-ceiling-fixation" value="cantoneiras">
+                                <label for="single-ceiling-cantoneiras">Cantoneiras (em cada parede)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="add-single-ceiling">Adicionar Teto</button>
+                </div>
+                
+                <div class="instructions">
+                    <h3>Instruções:</h3>
+                    <ul>
+                        <li><strong>Ambiente:</strong> Adicione cada ambiente separadamente (quarto, sala, etc.)</li>
+                        <li><strong>Parede/Teto Único:</strong> Para adicionar elementos avulsos</li>
+                        <li><strong>Materiais Parede:</strong> Placas, Guias (1 em cada lado da parede) e Montantes (a cada 60cm, pulando primeiro e último)</li>
+                        <li><strong>Materiais Teto:</strong> Placas, F-530 (a cada 60cm, pulando primeiro e último), Tabica/Cantoneiras (perímetro)</li>
+                        <li>Clique em "Limpar Tudo" para recomeçar os cálculos</li>
+                    </ul>
+                </div>
+                
+                <div class="room-actions">
+                    <button class="btn" id="calculate-all">Calcular Todos Ambientes</button>
+                    <button class="btn btn-danger" id="reset-all">Limpar Tudo</button>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <h2 class="section-title">Resultados e Totais</h2>
+                
+                <div id="materials-list">
+                    <p style="text-align: center; color: #7f8c8d; padding: 20px;">Adicione ambientes para ver os cálculos</p>
+                </div>
+                
+                <div class="steel-types">
+                    <h3 style="color: #0d503c; margin-bottom: 15px;">Resumo por Tipo de Ambiente</h3>
+                    <div class="steel-grid" id="rooms-summary">
+                        <!-- Os ambientes serão adicionados aqui dinamicamente -->
+                        <p style="grid-column: 1 / -1; text-align: center; color: #7f8c8d;">Nenhum ambiente calculado ainda</p>
+                    </div>
+                </div>
+                
+                <div class="steel-types">
+                    <h3 style="color: #0d503c; margin-bottom: 15px;">Resumo de Materiais</h3>
+                    <div class="steel-grid" id="materials-summary">
+                        <!-- Os materiais serão adicionados aqui dinamicamente -->
+                        <p style="grid-column: 1 / -1; text-align: center; color: #7f8c8d;">Nenhum material calculado ainda</p>
+                    </div>
+                </div>
+                
+                <div class="total-section">
+                    <h3 style="color: white; margin-bottom: 20px;">Totais Gerais do Local</h3>
+                    <div class="totals-grid">
+                        <div class="total-item">
+                            <div class="total-label">Placas de Drywall</div>
+                            <div class="total-value" id="total-placas">0</div>
+                            <div style="font-size: 0.9rem; margin-top: 5px;"><span id="total-area-display">0</span> m²</div>
+                        </div>
+                        
+                        <div class="total-item">
+                            <div class="total-label">Perfis de Drywall (3m)</div>
+                            <div class="total-value" id="total-barras">0</div>
+                            <div style="font-size: 0.9rem; margin-top: 5px;"><span id="total-metros">0</span> metros</div>
+                        </div>
+                        
+                        <div class="total-item">
+                            <div class="total-label">Ambientes Calculados</div>
+                            <div class="total-value" id="total-rooms">0</div>
+                            <div style="font-size: 0.9rem; margin-top: 5px;">Paredes + Tetos</div>
+                        </div>
+                        
+                        <div class="total-item">
+                            <div class="total-label">Custo Total Estimado</div>
+                            <div class="total-value" id="total-custo">R$ 0</div>
+                            <div style="font-size: 0.9rem; margin-top: 5px;">Todos os materiais</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cost-inputs">
+                    <h3 style="color: #f39c12; margin-bottom: 15px;">Preços Unitários (Insira os valores):</h3>
+                    <div class="cost-grid">
+                        <!-- PRIMEIRA LINHA -->
+                        <div class="cost-item">
+                            <label for="custo-placa">Placa Drywall (unidade)</label>
+                            <input type="number" id="custo-placa" placeholder="R$" value="34" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-f530">Canaleta F-530 (3m)</label>
+                            <input type="number" id="custo-f530" placeholder="R$" value="8.9" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-tabica">Tabica (3m)</label>
+                            <input type="number" id="custo-tabica" placeholder="R$" value="12.9" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-cantoneira">Cantoneira (3m)</label>
+                            <input type="number" id="custo-cantoneira" placeholder="R$" value="6" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-montante">Montante (3m)</label>
+                            <input type="number" id="custo-montante" placeholder="R$" value="18" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-guia">Guia (3m)</label>
+                            <input type="number" id="custo-guia" placeholder="R$" value="18" step="0.01" min="0">
+                        </div>
+                        
+                        <!-- SEGUNDA LINHA - NOVOS ITENS -->
+                        <div class="cost-item">
+                            <label for="custo-parafuso">Caixa Parafuso (GN25)</label>
+                            <input type="number" id="custo-parafuso" placeholder="R$" value="0" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-massa">Massa de Drywall</label>
+                            <input type="number" id="custo-massa" placeholder="R$" value="0" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-fita">Fita Telada</label>
+                            <input type="number" id="custo-fita" placeholder="R$" value="0" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-parafuso-bucha">Parafusos e Buchas 6</label>
+                            <input type="number" id="custo-parafuso-bucha" placeholder="R$" value="0" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-regulador">Regulador</label>
+                            <input type="number" id="custo-regulador" placeholder="R$" value="0" step="0.01" min="0">
+                        </div>
+                        <div class="cost-item">
+                            <label for="custo-tirantes">Tirantes</label>
+                            <input type="number" id="custo-tirantes" placeholder="R$" value="0" step="0.01" min="0">
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="btn" id="update-prices" style="width: auto; padding: 10px 20px;">Atualizar Preços</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados da aplicação
+        let rooms = []; // Lista de ambientes configurados
+        let materials = []; // Lista de elementos calculados
+        let totals = {
+            placas: 0,
+            area: 0,
+            barras: 0,
+            metros: 0,
+            custo: 0,
+            custoAdicional: 0,
+            roomsCount: 0,
+            items: {},
+            roomsSummary: {}
+        };
+        
+        // Preços padrão
+        let prices = {
+            placa: 34,
+            f530: 8.9,
+            tabica: 12.9,
+            cantoneira: 6,
+            montante: 18,
+            guia: 18
+        };
+        
+        // Elementos do DOM
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const addRoomBtn = document.getElementById('add-room');
+        const addMultipleRoomsBtn = document.getElementById('add-multiple-rooms');
+        const addSingleWallBtn = document.getElementById('add-single-wall');
+        const addSingleCeilingBtn = document.getElementById('add-single-ceiling');
+        const calculateAllBtn = document.getElementById('calculate-all');
+        const resetBtn = document.getElementById('reset-all');
+        const updatePricesBtn = document.getElementById('update-prices');
+        const materialsList = document.getElementById('materials-list');
+        const materialsSummary = document.getElementById('materials-summary');
+        const roomsSummaryElement = document.getElementById('rooms-summary');
+        const roomsAddedList = document.getElementById('rooms-added-list');
+        
+        // Elementos de totais
+        const totalPlacasElement = document.getElementById('total-placas');
+        const totalAreaElement = document.getElementById('total-area-display');
+        const totalBarrasElement = document.getElementById('total-barras');
+        const totalMetrosElement = document.getElementById('total-metros');
+        const totalRoomsElement = document.getElementById('total-rooms');
+        const totalCustoElement = document.getElementById('total-custo');
+        
+        // Elementos de preços
+        const custoPlacaInput = document.getElementById('custo-placa');
+        const custoF530Input = document.getElementById('custo-f530');
+        const custoTabicaInput = document.getElementById('custo-tabica');
+        const custoCantoneiraInput = document.getElementById('custo-cantoneira');
+        const custoMontanteInput = document.getElementById('custo-montante');
+        const custoGuiaInput = document.getElementById('custo-guia');
+        
+        // Novos elementos de preços
+        const custoParafusoInput = document.getElementById('custo-parafuso');
+        const custoMassaInput = document.getElementById('custo-massa');
+        const custoFitaInput = document.getElementById('custo-fita');
+        const custoParafusoBuchaInput = document.getElementById('custo-parafuso-bucha');
+        const custoReguladorInput = document.getElementById('custo-regulador');
+        const custoTirantesInput = document.getElementById('custo-tirantes');
+        
+        // Sistema de abas
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                
+                // Atualizar aba ativa
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Mostrar conteúdo correspondente
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === tabId) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Mostrar/ocultar opções baseado em checkboxes - AMBIENTE
+        document.getElementById('room-include-walls').addEventListener('change', function() {
+            document.getElementById('room-walls-options').style.display = this.checked ? 'block' : 'none';
+        });
+        
+        document.getElementById('room-include-ceiling').addEventListener('change', function() {
+            document.getElementById('room-ceiling-options').style.display = this.checked ? 'block' : 'none';
+        });
+        
+        // Função para dividir comprimentos maiores que 3m em múltiplos de 3m
+        function dividirComprimento(comprimento) {
+            let pedacos = [];
+            while (comprimento > 3) {
+                pedacos.push(3);
+                comprimento -= 3;
+            }
+            if (comprimento > 0) {
+                pedacos.push(comprimento);
+            }
+            return pedacos;
+        }
+        
+        // Função para otimizar cortes de barras de 3m CORRIGIDA
+        function otimizarCortesComSobras(comprimentosNecessarios) {
+            if (comprimentosNecessarios.length === 0) return { 
+                quantidade: 0, 
+                desperdicio: 0, 
+                eficiencia: "100", 
+                cortes: [] 
+            };
+            
+            // Dividir comprimentos maiores que 3m
+            let todosPedacos = [];
+            comprimentosNecessarios.forEach(comp => {
+                if (comp > 3) {
+                    todosPedacos = todosPedacos.concat(dividirComprimento(comp));
+                } else {
+                    todosPedacos.push(comp);
+                }
+            });
+            
+            todosPedacos.sort((a, b) => b - a);
+            
+            let barras = [];
+            let desperdicioTotal = 0;
+            
+            for (let pedaco of todosPedacos) {
+                let colocada = false;
+                
+                for (let i = 0; i < barras.length; i++) {
+                    let espacoLivre = 3 - barras[i].reduce((sum, c) => sum + c, 0);
+                    
+                    if (espacoLivre >= pedaco) {
+                        barras[i].push(pedaco);
+                        colocada = true;
+                        desperdicioTotal += espacoLivre - pedaco;
+                        break;
+                    }
+                }
+                
+                if (!colocada) {
+                    barras.push([pedaco]);
+                    desperdicioTotal += 3 - pedaco;
+                }
+            }
+            
+            const totalUsado = todosPedacos.reduce((a, b) => a + b, 0);
+            const eficiencia = ((totalUsado / (barras.length * 3)) * 100).toFixed(1);
+            
+            let cortesDetalhados = barras.map((barra, index) => {
+                const usado = barra.reduce((a, b) => a + b, 0);
+                const desperdicio = 3 - usado;
+                return {
+                    barra: index + 1,
+                    pedacos: [...barra],
+                    usado: usado,
+                    desperdicio: desperdicio
+                };
+            });
+            
+            return {
+                quantidade: barras.length,
+                desperdicio: desperdicioTotal,
+                eficiencia: eficiencia,
+                cortes: cortesDetalhados
+            };
+        }
+        
+        // Função para calcular placas de drywall
+        function calcularPlacasDrywall(areaTotal) {
+            const areaPlaca = 2.16; // 1.20m x 1.80m
+            const placas = Math.ceil(areaTotal / areaPlaca);
+            
+            return {
+                placas: placas,
+                areaTotal: areaTotal,
+                areaCoberta: placas * areaPlaca,
+                desperdicio: (placas * areaPlaca) - areaTotal,
+                eficiencia: (areaTotal / (placas * areaPlaca) * 100).toFixed(1)
+            };
+        }
+        
+        // Função para calcular APENAS materiais de PAREDE
+        function calcularApenasParede(largura, comprimento, altura, qtdParedes, doubleWalls) {
+            let elementos = [];
+            let areaTotalParedes = 0;
+            
+            // Calcular área total das paredes
+            if (qtdParedes >= 1) {
+                const parede1 = calcularMateriaisParede(largura, altura, 1, doubleWalls ? "double" : "single");
+                parede1.descricao = `Parede frontal (${largura}m x ${altura}m)`;
+                elementos.push(parede1);
+                areaTotalParedes += largura * altura * (doubleWalls ? 2 : 1);
+            }
+            
+            if (qtdParedes >= 2) {
+                const parede2 = calcularMateriaisParede(largura, altura, 1, doubleWalls ? "double" : "single");
+                parede2.descricao = `Parede oposta (${largura}m x ${altura}m)`;
+                elementos.push(parede2);
+                areaTotalParedes += largura * altura * (doubleWalls ? 2 : 1);
+            }
+            
+            if (qtdParedes >= 3) {
+                const parede3 = calcularMateriaisParede(comprimento, altura, 1, doubleWalls ? "double" : "single");
+                parede3.descricao = `Parede lateral (${comprimento}m x ${altura}m)`;
+                elementos.push(parede3);
+                areaTotalParedes += comprimento * altura * (doubleWalls ? 2 : 1);
+            }
+            
+            if (qtdParedes >= 4) {
+                const parede4 = calcularMateriaisParede(comprimento, altura, 1, doubleWalls ? "double" : "single");
+                parede4.descricao = `Parede lateral oposta (${comprimento}m x ${altura}m)`;
+                elementos.push(parede4);
+                areaTotalParedes += comprimento * altura * (doubleWalls ? 2 : 1);
+            }
+            
+            // Consolidar totais
+            let placasTotal = 0;
+            let guiasTotal = 0;
+            let montantesTotal = 0;
+            let custoTotal = 0;
+            
+            elementos.forEach(elemento => {
+                placasTotal += elemento.placas || 0;
+                guiasTotal += elemento.guias || 0;
+                montantesTotal += elemento.montantes || 0;
+                custoTotal += elemento.custo;
+            });
+            
+            return {
+                tipoCalculo: 'parede',
+                elementos: elementos,
+                
+                // Totais consolidados
+                placas: placasTotal,
+                area: areaTotalParedes,
+                guias: guiasTotal,
+                montantes: montantesTotal,
+                custo: custoTotal
+            };
+        }
+        
+        // Função para calcular APENAS materiais de TETO
+        function calcularApenasTeto(largura, comprimento, includeF530, fixacaoTeto) {
+            let elementos = [];
+            let areaTotalTeto = largura * comprimento;
+            
+            // Calcular teto
+            const teto = calcularMateriaisTeto(largura, comprimento, 1, includeF530, fixacaoTeto);
+            teto.descricao = `Teto (${largura}m x ${comprimento}m)`;
+            elementos.push(teto);
+            
+            // Consolidar totais
+            let placasTotal = 0;
+            let f530Total = 0;
+            let fixacaoTotal = 0;
+            let fixacaoTipo = '';
+            let custoTotal = 0;
+            
+            elementos.forEach(elemento => {
+                placasTotal += elemento.placas || 0;
+                f530Total += elemento.f530 || 0;
+                
+                if (elemento.fixacaoTipo === 'tabica') {
+                    fixacaoTotal += elemento.fixacao || 0;
+                    fixacaoTipo = 'tabica';
+                } else if (elemento.fixacaoTipo === 'cantoneiras') {
+                    fixacaoTotal += elemento.fixacao || 0;
+                    fixacaoTipo = 'cantoneiras';
+                }
+                
+                custoTotal += elemento.custo;
+            });
+            
+            return {
+                tipoCalculo: 'teto',
+                elementos: elementos,
+                
+                // Totais consolidados
+                placas: placasTotal,
+                area: areaTotalTeto,
+                f530: f530Total,
+                fixacao: fixacaoTotal,
+                fixacaoTipo: fixacaoTipo,
+                custo: custoTotal
+            };
+        }
+        
+        // Função para calcular AMBOS (parede + teto)
+        function calcularParedeETeto(largura, comprimento, altura, qtdParedes, doubleWalls, includeF530, fixacaoTeto) {
+            // Calcular parede
+            const resultadoParede = calcularApenasParede(
+                largura,
+                comprimento,
+                altura,
+                qtdParedes,
+                doubleWalls
+            );
+            
+            // Calcular teto
+            const resultadoTeto = calcularApenasTeto(
+                largura,
+                comprimento,
+                includeF530,
+                fixacaoTeto
+            );
+            
+            // Combinar resultados
+            return {
+                tipoCalculo: 'ambos',
+                elementos: [...resultadoParede.elementos, ...resultadoTeto.elementos],
+                
+                // Totais combinados
+                placas: resultadoParede.placas + resultadoTeto.placas,
+                area: resultadoParede.area + resultadoTeto.area,
+                guias: resultadoParede.guias || 0,
+                montantes: resultadoParede.montantes || 0,
+                f530: resultadoTeto.f530 || 0,
+                fixacao: resultadoTeto.fixacao || 0,
+                fixacaoTipo: resultadoTeto.fixacaoTipo || '',
+                custo: resultadoParede.custo + resultadoTeto.custo
+            };
+        }
+        
+        // Função para calcular materiais de uma parede
+        function calcularMateriaisParede(largura, altura, quantidade, tipo) {
+            const areaParede = largura * altura;
+            const areaTotal = areaParede * quantidade * (tipo === "double" ? 2 : 1);
+            
+            // Placas de drywall
+            const resultadoDrywall = calcularPlacasDrywall(areaTotal);
+            
+            // GUIAS: 1 guia para cada lado da parede (topo, base, esquerda, direita)
+            let comprimentosGuias = [];
+            for (let i = 0; i < quantidade; i++) {
+                // 4 guias por parede: 1 para cada lado
+                comprimentosGuias.push(largura);  // Guia horizontal superior (topo)
+                comprimentosGuias.push(largura);  // Guia horizontal inferior (base)
+                comprimentosGuias.push(altura);   // Guia vertical esquerda
+                comprimentosGuias.push(altura);   // Guia vertical direita
+            }
+            
+            const resultadoGuias = otimizarCortesComSobras(comprimentosGuias);
+            
+            // MONTANTES: espaçados a cada 60cm, pulando o primeiro e último 60cm
+            const numMontantes = Math.max(0, Math.ceil((largura - 0.6) / 0.6));
+            const comprimentoMontante = altura;
+            
+            let comprimentosMontantes = [];
+            for (let i = 0; i < numMontantes * quantidade; i++) {
+                comprimentosMontantes.push(comprimentoMontante);
+            }
+            
+            const resultadoMontantes = otimizarCortesComSobras(comprimentosMontantes);
+            
+            // Calcular custos
+            const custoDrywall = resultadoDrywall.placas * prices.placa;
+            const custoGuias = resultadoGuias.quantidade * prices.guia;
+            const custoMontantes = resultadoMontantes.quantidade * prices.montante;
+            const custoTotal = custoDrywall + custoGuias + custoMontantes;
+            
+            return {
+                tipo: 'Parede',
+                dimensoes: `${largura}m x ${altura}m`,
+                quantidade: quantidade,
+                tipoAcabamento: tipo,
+                placas: resultadoDrywall.placas,
+                area: areaTotal,
+                guias: resultadoGuias.quantidade,
+                montantes: resultadoMontantes.quantidade,
+                materiais: {
+                    drywall: {
+                        nome: "Placas de Drywall",
+                        quantidade: resultadoDrywall.placas,
+                        unidade: "unidades",
+                        area: resultadoDrywall.areaTotal,
+                        desperdicio: resultadoDrywall.desperdicio,
+                        eficiencia: resultadoDrywall.eficiencia,
+                        custo: custoDrywall
+                    },
+                    guias: {
+                        nome: "Guias para Parede (1 em cada lado)",
+                        quantidade: resultadoGuias.quantidade,
+                        unidade: "barras (3m)",
+                        comprimentoTotal: comprimentosGuias.reduce((a, b) => a + b, 0),
+                        quantidadeGuias: 4 * quantidade,
+                        desperdicio: resultadoGuias.desperdicio,
+                        eficiencia: resultadoGuias.eficiencia,
+                        cortes: resultadoGuias.cortes,
+                        custo: custoGuias
+                    },
+                    montantes: {
+                        nome: "Montantes (a cada 60cm, pulando primeiro e último)",
+                        quantidade: resultadoMontantes.quantidade,
+                        unidade: "barras (3m)",
+                        quantidadeMontantes: numMontantes * quantidade,
+                        espacamento: "60cm",
+                        desperdicio: resultadoMontantes.desperdicio,
+                        eficiencia: resultadoMontantes.eficiencia,
+                        cortes: resultadoMontantes.cortes,
+                        custo: custoMontantes
+                    }
+                },
+                custo: custoTotal
+            };
+        }
+        
+        // Função para calcular materiais de um teto
+        function calcularMateriaisTeto(largura, comprimento, quantidade, includeF530, fixacaoTeto) {
+            const areaTeto = largura * comprimento;
+            const areaTotal = areaTeto * quantidade;
+            
+            // Placas de drywall
+            const resultadoDrywall = calcularPlacasDrywall(areaTotal);
+            
+            let f530Result = null;
+            let fixacaoResult = null;
+            let fixacaoTipo = '';
+            let custoTotal = 0;
+            
+            // F-530 (Canaleta)
+            if (includeF530) {
+                const numCanaletas = Math.max(0, Math.ceil((comprimento - 0.6) / 0.6));
+                const comprimentoCanaletas = largura;
+                
+                let comprimentosCanaletas = [];
+                for (let i = 0; i < numCanaletas * quantidade; i++) {
+                    comprimentosCanaletas.push(comprimentoCanaletas);
+                }
+                
+                const resultadoF530 = otimizarCortesComSobras(comprimentosCanaletas);
+                
+                f530Result = {
+                    nome: "Canaleta F-530 (a cada 60cm, pulando primeiro e último)",
+                    quantidade: resultadoF530.quantidade,
+                    unidade: "barras (3m)",
+                    direcao: 'largura',
+                    quantidadeCanaletas: numCanaletas * quantidade,
+                    espacamento: "60cm",
+                    desperdicio: resultadoF530.desperdicio,
+                    eficiencia: resultadoF530.eficiencia,
+                    cortes: resultadoF530.cortes,
+                    custo: resultadoF530.quantidade * prices.f530
+                };
+            }
+            
+            // Tabica ou Cantoneiras para fixação nas paredes
+            if (fixacaoTeto === 'tabica' || fixacaoTeto === 'cantoneiras') {
+                const nomeMaterial = fixacaoTeto === 'tabica' ? "Tabica" : "Cantoneiras";
+                const precoMaterial = fixacaoTeto === 'tabica' ? prices.tabica : prices.cantoneira;
+                
+                // 4 tabicas por teto: 1 para cada parede
+                let comprimentosFixacao = [];
+                
+                for (let i = 0; i < quantidade; i++) {
+                    // 1 tabica para cada parede (4 paredes)
+                    comprimentosFixacao.push(largura);   // Parede frontal
+                    comprimentosFixacao.push(largura);   // Parede oposta
+                    comprimentosFixacao.push(comprimento); // Parede lateral
+                    comprimentosFixacao.push(comprimento); // Parede lateral oposta
+                }
+                
+                const resultadoFixacao = otimizarCortesComSobras(comprimentosFixacao);
+                
+                fixacaoResult = {
+                    nome: `${nomeMaterial} (1 em cada parede)`,
+                    quantidade: resultadoFixacao.quantidade,
+                    unidade: "barras (3m)",
+                    comprimentoTotal: comprimentosFixacao.reduce((a, b) => a + b, 0),
+                    quantidadePecas: 4 * quantidade,
+                    desperdicio: resultadoFixacao.desperdicio,
+                    eficiencia: resultadoFixacao.eficiencia,
+                    cortes: resultadoFixacao.cortes,
+                    custo: resultadoFixacao.quantidade * precoMaterial
+                };
+                
+                fixacaoTipo = fixacaoTeto;
+            }
+            
+            // Calcular custo total
+            custoTotal = resultadoDrywall.placas * prices.placa;
+            if (f530Result) custoTotal += f530Result.custo;
+            if (fixacaoResult) custoTotal += fixacaoResult.custo;
+            
+            // Preparar materiais
+            const materiais = {
+                drywall: {
+                    nome: "Placas de Drywall",
+                    quantidade: resultadoDrywall.placas,
+                    unidade: "unidades",
+                    area: resultadoDrywall.areaTotal,
+                    desperdicio: resultadoDrywall.desperdicio,
+                    eficiencia: resultadoDrywall.eficiencia,
+                    custo: resultadoDrywall.placas * prices.placa
+                }
+            };
+            
+            if (f530Result) materiais.f530 = f530Result;
+            if (fixacaoResult) materiais[fixacaoTipo] = fixacaoResult;
+            
+            return {
+                tipo: 'Teto',
+                dimensoes: `${largura}m x ${comprimento}m`,
+                quantidade: quantidade,
+                fixacaoTipo: fixacaoTeto,
+                placas: resultadoDrywall.placas,
+                area: areaTotal,
+                f530: f530Result ? f530Result.quantidade : 0,
+                fixacao: fixacaoResult ? fixacaoResult.quantidade : 0,
+                materiais: materiais,
+                custo: custoTotal
+            };
+        }
+        
+        // Função para adicionar um ambiente à lista
+        function adicionarAmbiente() {
+            const tipo = document.getElementById('room-type').value;
+            const nome = document.getElementById('room-name').value || tipo;
+            const largura = parseFloat(document.getElementById('room-width').value);
+            const comprimento = parseFloat(document.getElementById('room-length').value);
+            const altura = parseFloat(document.getElementById('room-height').value);
+            const incluirParedes = document.getElementById('room-include-walls').checked;
+            const incluirTeto = document.getElementById('room-include-ceiling').checked;
+            const qtdParedes = incluirParedes ? parseInt(document.getElementById('room-walls-count').value) : 0;
+            const doubleWalls = incluirParedes ? document.getElementById('room-walls-double').checked : false;
+            const includeF530 = incluirTeto ? document.getElementById('room-ceiling-f530').checked : false;
+            const fixacaoTeto = incluirTeto ? document.querySelector('input[name="room-ceiling-fixation"]:checked').value : 'tabica';
+            
+            if (isNaN(largura) || isNaN(comprimento) || isNaN(altura) || largura <= 0 || comprimento <= 0 || altura <= 0) {
+                alert('Por favor, insira valores válidos para largura, comprimento e altura.');
+                return;
+            }
+            
+            if (!incluirParedes && !incluirTeto) {
+                alert('Por favor, selecione pelo menos um elemento (paredes ou teto) para o ambiente.');
+                return;
+            }
+            
+            const ambiente = {
+                id: Date.now(), // ID único baseado no timestamp
+                tipo: tipo,
+                nome: nome,
+                largura: largura,
+                comprimento: comprimento,
+                altura: altura,
+                incluirParedes: incluirParedes,
+                incluirTeto: incluirTeto,
+                qtdParedes: qtdParedes,
+                doubleWalls: doubleWalls,
+                includeF530: includeF530,
+                fixacaoTeto: fixacaoTeto
+            };
+            
+            rooms.push(ambiente);
+            atualizarListaAmbientes();
+            
+            // Feedback visual
+            addRoomBtn.textContent = 'Ambiente Adicionado!';
+            setTimeout(() => {
+                addRoomBtn.textContent = 'Adicionar Ambiente';
+            }, 1000);
+        }
+        
+        // Função para adicionar vários ambientes de uma vez
+        function adicionarVariosAmbientes() {
+            const tipo = document.getElementById('room-type').value;
+            const nome = document.getElementById('room-name').value || tipo;
+            const largura = parseFloat(document.getElementById('room-width').value);
+            const comprimento = parseFloat(document.getElementById('room-length').value);
+            const altura = parseFloat(document.getElementById('room-height').value);
+            const incluirParedes = document.getElementById('room-include-walls').checked;
+            const incluirTeto = document.getElementById('room-include-ceiling').checked;
+            const qtdParedes = incluirParedes ? parseInt(document.getElementById('room-walls-count').value) : 0;
+            const doubleWalls = incluirParedes ? document.getElementById('room-walls-double').checked : false;
+            const includeF530 = incluirTeto ? document.getElementById('room-ceiling-f530').checked : false;
+            const fixacaoTeto = incluirTeto ? document.querySelector('input[name="room-ceiling-fixation"]:checked').value : 'tabica';
+            
+            if (isNaN(largura) || isNaN(comprimento) || isNaN(altura) || largura <= 0 || comprimento <= 0 || altura <= 0) {
+                alert('Por favor, insira valores válidos para largura, comprimento e altura.');
+                return;
+            }
+            
+            const quantidade = prompt(`Quantos ambientes "${nome}" deseja adicionar?`, "1");
+            const qtd = parseInt(quantidade) || 1;
+            
+            for (let i = 0; i < qtd; i++) {
+                const ambiente = {
+                    id: Date.now() + i, // ID único
+                    tipo: tipo,
+                    nome: `${nome} ${i + 1}`,
+                    largura: largura,
+                    comprimento: comprimento,
+                    altura: altura,
+                    incluirParedes: incluirParedes,
+                    incluirTeto: incluirTeto,
+                    qtdParedes: qtdParedes,
+                    doubleWalls: doubleWalls,
+                    includeF530: includeF530,
+                    fixacaoTeto: fixacaoTeto
+                };
+                
+                rooms.push(ambiente);
+            }
+            
+            atualizarListaAmbientes();
+            
+            // Feedback visual
+            addMultipleRoomsBtn.textContent = `${qtd} Ambientes Adicionados!`;
+            setTimeout(() => {
+                addMultipleRoomsBtn.textContent = 'Adicionar Vários';
+            }, 1000);
+        }
+        
+        // Função para atualizar a lista de ambientes adicionados
+        function atualizarListaAmbientes() {
+            if (rooms.length === 0) {
+                roomsAddedList.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 10px;">Nenhum ambiente adicionado ainda</p>';
+                return;
+            }
+            
+            let html = '';
+            rooms.forEach((room, index) => {
+                const badgeClass = `badge-${room.tipo}`;
+                const tipoNome = room.tipo.charAt(0).toUpperCase() + room.tipo.slice(1);
+                
+                html += `
+                <div class="room-item">
+                    <div class="room-info">
+                        <span class="room-badge ${badgeClass}">${tipoNome}</span>
+                        <span>${room.nome}: ${room.largura}m x ${room.comprimento}m x ${room.altura}m</span>
+                    </div>
+                    <button class="room-remove" data-index="${index}">Remover</button>
+                </div>
+                `;
+            });
+            
+            roomsAddedList.innerHTML = html;
+            
+            // Adicionar event listeners aos botões de remover
+            document.querySelectorAll('.room-remove').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    rooms.splice(index, 1);
+                    atualizarListaAmbientes();
+                });
+            });
+        }
+        
+        // Função para calcular todos os ambientes
+        function calcularTodosAmbientes() {
+            materials = []; // Limpar materiais anteriores
+            totals = {
+                placas: 0,
+                area: 0,
+                barras: 0,
+                metros: 0,
+                custo: 0,
+                custoAdicional: 0,
+                roomsCount: rooms.length,
+                items: {},
+                roomsSummary: {}
+            };
+            
+            if (rooms.length === 0) {
+                alert('Adicione pelo menos um ambiente antes de calcular.');
+                return;
+            }
+            
+            rooms.forEach(room => {
+                let ambienteCalculado;
+                
+                // Determinar o tipo de cálculo baseado nas seleções
+                if (room.incluirParedes && !room.incluirTeto) {
+                    // Apenas parede
+                    ambienteCalculado = calcularApenasParede(
+                        room.largura,
+                        room.comprimento,
+                        room.altura,
+                        room.qtdParedes,
+                        room.doubleWalls
+                    );
+                } else if (!room.incluirParedes && room.incluirTeto) {
+                    // Apenas teto
+                    ambienteCalculado = calcularApenasTeto(
+                        room.largura,
+                        room.comprimento,
+                        room.includeF530,
+                        room.fixacaoTeto
+                    );
+                } else if (room.incluirParedes && room.incluirTeto) {
+                    // Ambos
+                    ambienteCalculado = calcularParedeETeto(
+                        room.largura,
+                        room.comprimento,
+                        room.altura,
+                        room.qtdParedes,
+                        room.doubleWalls,
+                        room.includeF530,
+                        room.fixacaoTeto
+                    );
+                }
+                
+                ambienteCalculado.tipoAmbiente = room.tipo;
+                ambienteCalculado.nome = room.nome;
+                ambienteCalculado.largura = room.largura;
+                ambienteCalculado.comprimento = room.comprimento;
+                ambienteCalculado.altura = room.altura;
+                ambienteCalculado.incluirParedes = room.incluirParedes;
+                ambienteCalculado.incluirTeto = room.incluirTeto;
+                ambienteCalculado.qtdParedes = room.qtdParedes;
+                ambienteCalculado.doubleWalls = room.doubleWalls;
+                
+                materials.push(ambienteCalculado);
+                
+                // Atualizar resumo por tipo de ambiente
+                if (!totals.roomsSummary[room.tipo]) {
+                    totals.roomsSummary[room.tipo] = {
+                        count: 0,
+                        placas: 0,
+                        custo: 0
+                    };
+                }
+                
+                totals.roomsSummary[room.tipo].count++;
+                totals.roomsSummary[room.tipo].placas += ambienteCalculado.placas;
+                totals.roomsSummary[room.tipo].custo += ambienteCalculado.custo;
+                
+                // Atualizar totais gerais
+                totals.placas += ambienteCalculado.placas;
+                totals.area += ambienteCalculado.area;
+                totals.custo += ambienteCalculado.custo;
+                
+                // Contabilizar barras (perfis de drywall)
+                const barrasAmbiente = 
+                    (ambienteCalculado.guias || 0) + 
+                    (ambienteCalculado.montantes || 0) + 
+                    (ambienteCalculado.f530 || 0) + 
+                    (ambienteCalculado.fixacao || 0);
+                
+                totals.barras += barrasAmbiente;
+                
+                // Atualizar itens individuais
+                const adicionarItem = (nome, quantidade, custo) => {
+                    if (!totals.items[nome]) {
+                        totals.items[nome] = { quantidade: 0, custo: 0 };
+                    }
+                    totals.items[nome].quantidade += quantidade;
+                    totals.items[nome].custo += custo;
+                };
+                
+                // Adicionar placas
+                adicionarItem("Placas de Drywall", ambienteCalculado.placas, ambienteCalculado.placas * prices.placa);
+                
+                // Adicionar outras ferragens se existirem
+                if (ambienteCalculado.guias) adicionarItem("Guias", ambienteCalculado.guias, ambienteCalculado.guias * prices.guia);
+                if (ambienteCalculado.montantes) adicionarItem("Montantes", ambienteCalculado.montantes, ambienteCalculado.montantes * prices.montante);
+                if (ambienteCalculado.f530) adicionarItem("Canaletas F-530", ambienteCalculado.f530, ambienteCalculado.f530 * prices.f530);
+                
+                if (ambienteCalculado.fixacaoTipo === 'tabica' && ambienteCalculado.fixacao) {
+                    adicionarItem("Tabica", ambienteCalculado.fixacao, ambienteCalculado.fixacao * prices.tabica);
+                } else if (ambienteCalculado.fixacaoTipo === 'cantoneiras' && ambienteCalculado.fixacao) {
+                    adicionarItem("Cantoneiras", ambienteCalculado.fixacao, ambienteCalculado.fixacao * prices.cantoneira);
+                }
+            });
+            
+            totals.metros = totals.barras * 3;
+            
+            // Calcular custo adicional das novas opções
+            calcularCustoAdicional();
+            
+            atualizarListaResultados();
+            atualizarResumoAmbientes();
+            atualizarResumoMateriais();
+            atualizarTotaisGerais();
+            
+            // Feedback visual
+            calculateAllBtn.textContent = 'Cálculos Concluídos!';
+            setTimeout(() => {
+                calculateAllBtn.textContent = 'Calcular Todos Ambientes';
+            }, 1000);
+        }
+        
+        // Função para calcular custo adicional das novas opções
+        function calcularCustoAdicional() {
+            totals.custoAdicional = 
+                (parseFloat(custoParafusoInput.value) || 0) +
+                (parseFloat(custoMassaInput.value) || 0) +
+                (parseFloat(custoFitaInput.value) || 0) +
+                (parseFloat(custoParafusoBuchaInput.value) || 0) +
+                (parseFloat(custoReguladorInput.value) || 0) +
+                (parseFloat(custoTirantesInput.value) || 0);
+        }
+        
+        // Função para adicionar parede única
+        function adicionarParedeUnica() {
+            const largura = parseFloat(document.getElementById('single-wall-width').value);
+            const altura = parseFloat(document.getElementById('single-wall-height').value);
+            const quantidade = parseInt(document.getElementById('single-wall-quantity').value);
+            const tipo = document.getElementById('single-wall-type').value;
+            
+            if (isNaN(largura) || isNaN(altura) || isNaN(quantidade) || largura <= 0 || altura <= 0 || quantidade <= 0) {
+                alert('Por favor, insira valores válidos para largura, altura e quantidade.');
+                return;
+            }
+            
+            const parede = calcularMateriaisParede(largura, altura, quantidade, tipo);
+            parede.tipoAmbiente = 'parede';
+            parede.nome = `Parede ${largura}m x ${altura}m`;
+            parede.quantidade = quantidade;
+            
+            materials.push(parede);
+            
+            // Atualizar totais ao adicionar parede única
+            totals.placas += parede.placas || 0;
+            totals.area += parede.area || 0;
+            totals.custo += parede.custo || 0;
+            totals.barras += (parede.guias || 0) + (parede.montantes || 0);
+            totals.metros = totals.barras * 3;
+            totals.roomsCount++; // Incrementar contagem
+            
+            // Calcular custo adicional das novas opções
+            calcularCustoAdicional();
+            
+            atualizarListaResultados();
+            atualizarResumoMateriais();
+            atualizarTotaisGerais();
+            
+            // Feedback visual
+            addSingleWallBtn.textContent = 'Parede Adicionada!';
+            setTimeout(() => {
+                addSingleWallBtn.textContent = 'Adicionar Parede';
+            }, 1000);
+        }
+        
+        // Função para adicionar teto único
+        function adicionarTetoUnico() {
+            const largura = parseFloat(document.getElementById('single-ceiling-width').value);
+            const comprimento = parseFloat(document.getElementById('single-ceiling-length').value);
+            const quantidade = parseInt(document.getElementById('single-ceiling-quantity').value);
+            const includeF530 = document.getElementById('single-ceiling-f530').checked;
+            const fixacaoTeto = document.querySelector('input[name="single-ceiling-fixation"]:checked').value;
+            
+            if (isNaN(largura) || isNaN(comprimento) || isNaN(quantidade) || largura <= 0 || comprimento <= 0 || quantidade <= 0) {
+                alert('Por favor, insira valores válidos para largura, comprimento e quantidade.');
+                return;
+            }
+            
+            const teto = calcularMateriaisTeto(largura, comprimento, quantidade, includeF530, fixacaoTeto);
+            teto.tipoAmbiente = 'teto';
+            teto.nome = `Teto ${largura}m x ${comprimento}m`;
+            teto.quantidade = quantidade;
+            
+            materials.push(teto);
+            
+            // Atualizar totais ao adicionar teto único
+            totals.placas += teto.placas || 0;
+            totals.area += teto.area || 0;
+            totals.custo += teto.custo || 0;
+            totals.barras += (teto.f530 || 0) + (teto.fixacao || 0);
+            totals.metros = totals.barras * 3;
+            totals.roomsCount++; // Incrementar contagem
+            
+            // Calcular custo adicional das novas opções
+            calcularCustoAdicional();
+            
+            atualizarListaResultados();
+            atualizarResumoMateriais();
+            atualizarTotaisGerais();
+            
+            // Feedback visual
+            addSingleCeilingBtn.textContent = 'Teto Adicionado!';
+            setTimeout(() => {
+                addSingleCeilingBtn.textContent = 'Adicionar Teto';
+            }, 1000);
+        }
+        
+        // Função para atualizar a lista de resultados
+        function atualizarListaResultados() {
+            if (materials.length === 0) {
+                materialsList.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 20px;">Adicione ambientes para ver os cálculos</p>';
+                return;
+            }
+            
+            let html = '';
+            materials.forEach((material, index) => {
+                const badgeClass = material.tipoAmbiente === 'parede' ? 'badge-parede' : 
+                                 material.tipoAmbiente === 'teto' ? 'badge-teto' : 
+                                 `badge-${material.tipoAmbiente || 'outro'}`;
+                
+                const tipoNome = material.tipoAmbiente === 'parede' ? 'Parede' : 
+                                material.tipoAmbiente === 'teto' ? 'Teto' : 
+                                material.tipoAmbiente ? material.tipoAmbiente.charAt(0).toUpperCase() + material.tipoAmbiente.slice(1) : 
+                                'Ambiente';
+                
+                let detalhesMateriais = '';
+                let totaisMateriais = {};
+                
+                // Processar materiais para ambientes completos
+                if (material.elementos && material.elementos.length > 0) {
+                    material.elementos.forEach(elemento => {
+                        if (elemento.materiais) {
+                            Object.values(elemento.materiais).forEach(mat => {
+                                if (!totaisMateriais[mat.nome]) {
+                                    totaisMateriais[mat.nome] = {
+                                        quantidade: 0,
+                                        unidade: mat.unidade,
+                                        custo: 0,
+                                        cortes: []
+                                    };
+                                }
+                                totaisMateriais[mat.nome].quantidade += mat.quantidade;
+                                totaisMateriais[mat.nome].custo += mat.custo;
+                                
+                                if (mat.cortes && mat.cortes.length > 0) {
+                                    totaisMateriais[mat.nome].cortes = totaisMateriais[mat.nome].cortes.concat(mat.cortes);
+                                }
+                            });
+                        }
+                    });
+                } else if (material.materiais) {
+                    // Para paredes e tetos únicos
+                    Object.values(material.materiais).forEach(mat => {
+                        totaisMateriais[mat.nome] = {
+                            quantidade: mat.quantidade,
+                            unidade: mat.unidade,
+                            custo: mat.custo,
+                            cortes: mat.cortes || []
+                        };
+                    });
+                }
+                
+                // Construir HTML para materiais
+                Object.keys(totaisMateriais).forEach(nome => {
+                    const mat = totaisMateriais[nome];
+                    detalhesMateriais += `
+                    <div class="material-row">
+                        <div class="material-name">${nome}</div>
+                        <div class="material-qty">${mat.quantidade} ${mat.unidade}</div>
+                    </div>
+                    `;
+                    
+                    // Adicionar detalhes de cortes se existirem
+                    if (mat.cortes && mat.cortes.length > 0 && mat.unidade === "barras (3m)") {
+                        detalhesMateriais += `
+                        <div class="cut-plan">
+                            <h4>Detalhes de cortes para ${nome}:</h4>
+                            <div style="font-size: 0.9rem; color: #7f8c8d; margin-bottom: 10px;">
+                                Eficiência: ${material.materiais && material.materiais.guias ? material.materiais.guias.eficiencia : 
+                                           material.materiais && material.materiais.montantes ? material.materiais.montantes.eficiencia :
+                                           material.materiais && material.materiais.f530 ? material.materiais.f530.eficiencia :
+                                           material.materiais && material.materiais.tabica ? material.materiais.tabica.eficiencia :
+                                           material.materiais && material.materiais.cantoneiras ? material.materiais.cantoneiras.eficiencia : '0'}%
+                            </div>
+                        `;
+                        
+                        mat.cortes.forEach(corte => {
+                            const porcentagemUsada = (corte.usado / 3) * 100;
+                            const porcentagemDesperdicio = (corte.desperdicio / 3) * 100;
+                            
+                            detalhesMateriais += `
+                            <div class="cut-item">
+                                <div class="cut-bar">
+                                    <div class="cut-piece" style="width: ${porcentagemUsada}%;"></div>
+                                    <div class="cut-waste" style="width: ${porcentagemDesperdicio}%; left: ${porcentagemUsada}%;"></div>
+                                </div>
+                                <div class="cut-labels">
+                                    <span>Barra ${corte.barra}: ${corte.pedacos.map(p => p.toFixed(2) + 'm').join(', ')}</span>
+                                    <span class="waste-text">Sobra: ${corte.desperdicio.toFixed(2)}m</span>
+                                </div>
+                            </div>
+                            `;
+                        });
+                        
+                        detalhesMateriais += `</div>`;
+                    }
+                });
+                
+                // Informações específicas do elemento
+                let infoAdicional = '';
+                if (material.tipoCalculo) {
+                    infoAdicional += `<p><strong>Tipo:</strong> ${material.tipoCalculo === 'parede' ? 'Apenas parede' : material.tipoCalculo === 'teto' ? 'Apenas teto' : 'Parede + Teto'}</p>`;
+                }
+                
+                if (material.dimensoes) {
+                    infoAdicional += `<p><strong>Dimensões:</strong> ${material.dimensoes}</p>`;
+                }
+                
+                if (material.largura && material.comprimento) {
+                    infoAdicional += `<p><strong>Dimensões:</strong> ${material.largura}m x ${material.comprimento}m ${material.altura ? 'x ' + material.altura + 'm' : ''}</p>`;
+                }
+                
+                if (material.qtdParedes) {
+                    infoAdicional += `<p><strong>Paredes com drywall:</strong> ${material.qtdParedes}</p>`;
+                }
+                
+                if (material.doubleWalls !== undefined) {
+                    infoAdicional += `<p><strong>Drywall:</strong> ${material.doubleWalls ? 'Ambos os lados' : 'Apenas um lado'}</p>`;
+                }
+                
+                if (material.fixacaoTipo) {
+                    infoAdicional += `<p><strong>Fixação do teto:</strong> ${material.fixacaoTipo === 'tabica' ? 'Tabica (1 em cada parede)' : 'Cantoneiras (1 em cada parede)'}</p>`;
+                }
+                
+                html += `
+                <div class="material-item">
+                    <div class="material-header">
+                        <div class="material-title">
+                            <span class="room-badge ${badgeClass}">${tipoNome}</span>
+                            ${material.nome || material.tipoAmbiente || ''}
+                            ${material.quantidade && material.quantidade > 1 ? `(x${material.quantidade})` : ''}
+                        </div>
+                        <div class="material-quantity">R$ ${material.custo ? material.custo.toFixed(2) : '0'}</div>
+                    </div>
+                    <div class="material-details">
+                        ${infoAdicional}
+                        
+                        <div style="margin-top: 15px;">
+                            <h4 style="color: #e67e22; margin-bottom: 10px;">Materiais Necessários:</h4>
+                            ${detalhesMateriais}
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 10px; background-color: #2c3e50; color: white; border-radius: 5px; text-align: center;">
+                            <strong>Custo Total: R$ ${material.custo ? material.custo.toFixed(2) : '0'}</strong>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            materialsList.innerHTML = html;
+        }
+        
+        // Função para atualizar o resumo por tipo de ambiente
+        function atualizarResumoAmbientes() {
+            if (Object.keys(totals.roomsSummary).length === 0) {
+                roomsSummaryElement.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #7f8c8d;">Nenhum ambiente calculado ainda</p>';
+                return;
+            }
+            
+            let summaryHTML = '';
+            Object.keys(totals.roomsSummary).forEach(tipo => {
+                const roomSummary = totals.roomsSummary[tipo];
+                const tipoNome = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+                const badgeClass = `badge-${tipo}`;
+                
+                summaryHTML += `
+                <div class="steel-item">
+                    <div class="steel-header">
+                        <div class="steel-name">
+                            <span class="room-badge ${badgeClass}">${tipoNome}</span>
+                        </div>
+                        <div class="steel-quantity">${roomSummary.count}</div>
+                    </div>
+                    <div class="steel-details">
+                        <div>Placas: ${roomSummary.placas}</div>
+                        <div style="color: #2ecc71; font-weight: 600; margin-top: 5px;">Custo: R$ ${roomSummary.custo.toFixed(2)}</div>
+                    </div>
+                </div>
+                `;
+            });
+            
+            roomsSummaryElement.innerHTML = summaryHTML;
+        }
+        
+        // Função para atualizar o resumo de materiais
+        function atualizarResumoMateriais() {
+            if (Object.keys(totals.items).length === 0 && totals.placas === 0) {
+                materialsSummary.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #7f8c8d;">Nenhum material calculado ainda</p>';
+                return;
+            }
+            
+            let summaryHTML = '';
+            
+            // Adicionar placas de drywall se houver
+            if (totals.placas > 0) {
+                summaryHTML += `
+                <div class="steel-item">
+                    <div class="steel-header">
+                        <div class="steel-name">Placas de Drywall</div>
+                        <div class="steel-quantity">${totals.placas}</div>
+                    </div>
+                    <div class="steel-details">
+                        <div>Unidade: unidades</div>
+                        <div style="color: #2ecc71; font-weight: 600; margin-top: 5px;">Custo: R$ ${(totals.placas * prices.placa).toFixed(2)}</div>
+                    </div>
+                </div>
+                `;
+            }
+            
+            // Adicionar outros materiais
+            Object.keys(totals.items).forEach(nome => {
+                if (nome !== "Placas de Drywall") {
+                    const item = totals.items[nome];
+                    summaryHTML += `
+                    <div class="steel-item">
+                        <div class="steel-header">
+                            <div class="steel-name">${nome}</div>
+                            <div class="steel-quantity">${item.quantidade}</div>
+                        </div>
+                        <div class="steel-details">
+                            <div>Unidade: ${nome.includes('Placas') ? 'unidades' : 'barras (3m)'}</div>
+                            <div style="color: #2ecc71; font-weight: 600; margin-top: 5px;">Custo: R$ ${item.custo.toFixed(2)}</div>
+                        </div>
+                    </div>
+                    `;
+                }
+            });
+            
+            materialsSummary.innerHTML = summaryHTML;
+        }
+        
+        // Função para atualizar os totais gerais
+        function atualizarTotaisGerais() {
+            // Recalcular custo adicional sempre que atualizar totais
+            calcularCustoAdicional();
+            
+            // Calcular o custo total incluindo o custo adicional
+            const custoTotalComAdicional = totals.custo + totals.custoAdicional;
+            
+            // Atualizar a interface com os valores já calculados
+            totalPlacasElement.textContent = totals.placas;
+            totalAreaElement.textContent = totals.area.toFixed(2);
+            totalBarrasElement.textContent = totals.barras;
+            totalMetrosElement.textContent = totals.metros.toFixed(0);
+            totalRoomsElement.textContent = totals.roomsCount;
+            totalCustoElement.textContent = `R$ ${custoTotalComAdicional.toFixed(2)}`;
+        }
+        
+        // Função para atualizar os preços
+        function atualizarPrecos() {
+            // Atualizar apenas os preços que são usados nos cálculos principais
+            prices = {
+                placa: parseFloat(custoPlacaInput.value) || 34,
+                f530: parseFloat(custoF530Input.value) || 8.9,
+                tabica: parseFloat(custoTabicaInput.value) || 12.9,
+                cantoneira: parseFloat(custoCantoneiraInput.value) || 6,
+                montante: parseFloat(custoMontanteInput.value) || 18,
+                guia: parseFloat(custoGuiaInput.value) || 18
+            };
+            
+            // Recalcular todos os materiais com os novos preços
+            if (materials.length > 0) {
+                // Limpar e recalcular todos os ambientes
+                const ambientesParaRecalcular = [...rooms];
+                rooms = [];
+                materials = [];
+                
+                ambientesParaRecalcular.forEach(room => {
+                    rooms.push(room);
+                });
+                
+                calcularTodosAmbientes();
+            }
+            
+            // Atualizar a interface
+            atualizarListaResultados();
+            atualizarResumoAmbientes();
+            atualizarResumoMateriais();
+            atualizarTotaisGerais();
+            
+            // Feedback visual
+            updatePricesBtn.textContent = 'Preços Atualizados!';
+            setTimeout(() => {
+                updatePricesBtn.textContent = 'Atualizar Preços';
+            }, 1000);
+        }
+        
+        // Função para resetar tudo
+        function resetarTudo() {
+            if (materials.length === 0 && rooms.length === 0) {
+                alert('Não há cálculos para limpar.');
+                return;
+            }
+            
+            if (confirm('Tem certeza que deseja limpar todos os cálculos e ambientes?')) {
+                rooms = [];
+                materials = [];
+                totals = {
+                    placas: 0,
+                    area: 0,
+                    barras: 0,
+                    metros: 0,
+                    custo: 0,
+                    custoAdicional: 0,
+                    roomsCount: 0,
+                    items: {},
+                    roomsSummary: {}
+                };
+                
+                atualizarListaAmbientes();
+                atualizarListaResultados();
+                atualizarResumoAmbientes();
+                atualizarResumoMateriais();
+                atualizarTotaisGerais();
+                
+                // Resetar valores padrão
+                document.getElementById('room-width').value = 3.0;
+                document.getElementById('room-length').value = 4.0;
+                document.getElementById('room-height').value = 2.5;
+                document.getElementById('room-name').value = '';
+                
+                document.getElementById('single-wall-width').value = 4.2;
+                document.getElementById('single-wall-height').value = 2.5;
+                document.getElementById('single-wall-quantity').value = 1;
+                
+                document.getElementById('single-ceiling-width').value = 5.5;
+                document.getElementById('single-ceiling-length').value = 6.8;
+                document.getElementById('single-ceiling-quantity').value = 1;
+                
+                // Resetar checkboxes
+                document.getElementById('room-include-walls').checked = true;
+                document.getElementById('room-include-ceiling').checked = true;
+                document.getElementById('room-walls-double').checked = true;
+                document.getElementById('room-ceiling-f530').checked = true;
+                
+                document.getElementById('single-ceiling-f530').checked = true;
+                
+                // Resetar preços para os valores da imagem
+                custoPlacaInput.value = 34;
+                custoF530Input.value = 8.9;
+                custoTabicaInput.value = 12.9;
+                custoCantoneiraInput.value = 6;
+                custoMontanteInput.value = 18;
+                custoGuiaInput.value = 18;
+            }
+        }
+        
+        // Event Listeners
+        addRoomBtn.addEventListener('click', adicionarAmbiente);
+        addMultipleRoomsBtn.addEventListener('click', adicionarVariosAmbientes);
+        addSingleWallBtn.addEventListener('click', adicionarParedeUnica);
+        addSingleCeilingBtn.addEventListener('click', adicionarTetoUnico);
+        calculateAllBtn.addEventListener('click', calcularTodosAmbientes);
+        resetBtn.addEventListener('click', resetarTudo);
+        updatePricesBtn.addEventListener('click', atualizarPrecos);
+        
+        // Inicializar sistema
+        window.addEventListener('DOMContentLoaded', () => {
+            // Carregar preços salvos (se houver)
+            const savedPrices = localStorage.getItem('materialPrices');
+            if (savedPrices) {
+                try {
+                    const parsedPrices = JSON.parse(savedPrices);
+                    prices = { ...prices, ...parsedPrices };
+                    
+                    // Atualizar inputs
+                    custoPlacaInput.value = prices.placa;
+                    custoF530Input.value = prices.f530;
+                    custoTabicaInput.value = prices.tabica;
+                    custoCantoneiraInput.value = prices.cantoneira;
+                    custoMontanteInput.value = prices.montante;
+                    custoGuiaInput.value = prices.guia;
+                } catch (e) {
+                    console.log('Não foi possível carregar preços salvos');
+                }
+            }
+            
+            // Event listeners para os novos campos de preços adicionais
+            const novosCamposPreco = [
+                custoParafusoInput, custoMassaInput, custoFitaInput,
+                custoParafusoBuchaInput, custoReguladorInput, custoTirantesInput
+            ];
+            
+            novosCamposPreco.forEach(input => {
+                input.addEventListener('change', () => {
+                    // Recalcular custo adicional sempre que um valor mudar
+                    calcularCustoAdicional();
+                    atualizarTotaisGerais();
+                });
+            });
+            
+            // Salvar preços quando houver alteração
+            const priceInputs = [custoPlacaInput, custoF530Input, custoTabicaInput, custoCantoneiraInput, custoMontanteInput, custoGuiaInput];
+            priceInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    localStorage.setItem('materialPrices', JSON.stringify(prices));
+                });
+            });
+        });
+    </script>
+</body>
+</html>
